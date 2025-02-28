@@ -1,0 +1,10 @@
+G:\.net\MargeCode\MargeCode\obj\Debug\MargeCode.csproj.AssemblyReference.cache
+G:\.net\MargeCode\MargeCode\obj\Debug\MargeCode.csproj.CoreCompileInputs.cache
+G:\.net\MargeCode\MargeCode\bin\Debug\config.json
+G:\.net\MargeCode\MargeCode\bin\Debug\MargeCode.exe
+G:\.net\MargeCode\MargeCode\bin\Debug\MargeCode.pdb
+G:\.net\MargeCode\MargeCode\bin\Debug\Newtonsoft.Json.dll
+G:\.net\MargeCode\MargeCode\bin\Debug\Newtonsoft.Json.xml
+G:\.net\MargeCode\MargeCode\obj\Debug\MargeCode.csproj.Up2Date
+G:\.net\MargeCode\MargeCode\obj\Debug\MargeCode.exe
+G:\.net\MargeCode\MargeCode\obj\Debug\MargeCode.pdb

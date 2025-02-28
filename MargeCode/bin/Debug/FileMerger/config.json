@@ -1,0 +1,6 @@
+{
+  "includeExtensions": [".cs"],
+  "excludeFolders": ["node_modules", "bin", "obj",".idea",".git","UploadFile",".config",".vs"],
+  "excludeExtensions": [".exe", ".png", ".dll",".docx",".docxf",".pptx",".xlsx",".json",".config",".csproj",".http",".sln",".user"],
+  "outputFile": "all_code.txt"
+}
