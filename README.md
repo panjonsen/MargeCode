@@ -1,124 +1,44 @@
-# MargeCode 项目文档
+# MargeCode 程序介绍
 
-这是一个用于合并指定文件夹中特定扩展名文件的 C# 程序。它会根据配置文件扫描目录，将符合条件的代码文件合并到一个输出文件中。
+## 概述
 
-## 代码实现
+`MargeCode` 是一个用 C# 编写的文件合并工具，旨在将指定目录及其子目录中的特定类型的代码文件合并到一个输出文件中。它支持通过 JSON 配置文件自定义文件类型、排除文件夹和输出文件名，非常适合整理项目代码、生成代码快照或进行代码审查。
 
-以下是主要的 C# 代码 (`Program.cs`)：
+## 功能
 
-```csharp
-namespace MargeCode;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
+1. **文件筛选**：
+   - 根据文件扩展名（如 `.cs`）筛选需要合并的文件。
+   - 支持排除特定文件夹（如 `node_modules`、`bin`）和文件类型（如 `.exe`、`.dll`）。
 
-class Program
+2. **动态排除**：
+   - 自动排除程序所在目录，避免将自身或其他无关文件纳入合并。
+
+3. **输出格式**：
+   - 将文件按扩展名分组，每组文件以分隔符标记。
+   - 每个文件内容前添加完整路径作为标题，便于区分。
+
+4. **配置文件**：
+   - 通过 `config.json` 文件自定义设置，支持灵活调整合并规则。
+
+5. **错误处理**：
+   - 提供异常捕获和错误提示，确保程序运行稳定。
+
+## 使用方法
+
+### 1. 准备工作
+
+- **环境要求**：需要安装 .NET 运行时（如 .NET Core 或 .NET Framework）。
+- **源代码**：将 `Program.cs` 编译为可执行文件（例如 `MargeCode.exe`）。
+- **配置文件**：在程序目录下创建 `config.json`（若无则使用默认设置）。
+
+### 2. 配置 `config.json`
+
+以下是一个示例配置文件：
+
+```json
 {
-    // 配置类，用于映射 JSON
-    class Config
-    {
-        public string[] IncludeExtensions { get; set; } = Array.Empty<string>();
-        public string[] ExcludeFolders { get; set; } = Array.Empty<string>();
-        public string[] ExcludeExtensions { get; set; } = Array.Empty<string>();
-        public string OutputFile { get; set; } = "all_code.txt";
-    }
-
-    static void Main(string[] args)
-    {
-        try
-        {
-            // 读取配置
-            Config config;
-            string configPath = "config.json";
-            if (!File.Exists(configPath))
-            {
-                Console.WriteLine($"Config file '{configPath}' not found. Using default settings.");
-                config = new Config();
-            }
-            else
-            {
-                string jsonContent = File.ReadAllText(configPath);
-                config = JsonConvert.DeserializeObject<Config>(jsonContent) ?? new Config();
-            }
-
-            // 获取程序所在目录名，加入排除列表
-            string currentDirName = Path.GetFileName(Directory.GetCurrentDirectory());
-            var excludeFolders = config.ExcludeFolders.ToList();
-            excludeFolders.Add(currentDirName); // 动态排除程序所在文件夹
-
-            // 获取父目录作为合并根目录
-            string rootDirectory = Directory.GetParent(Directory.GetCurrentDirectory())?.FullName ?? Directory.GetCurrentDirectory();
-            Console.WriteLine($"Merging files from: {rootDirectory}");
-
-            // 更新 config 的 ExcludeFolders
-            config.ExcludeFolders = excludeFolders.ToArray();
-
-            // 获取所有符合条件的文件
-            var files = GetFiles(rootDirectory, config);
-
-            // 如果没有文件，直接退出
-            if (!files.Any())
-            {
-                Console.WriteLine("No files found matching the criteria.");
-                return;
-            }
-
-            // 按后缀名分组
-            var filesByExtension = files
-                .GroupBy(file => file.Extension.ToLowerInvariant())
-                .OrderBy(g => g.Key);
-
-            // 合并文件并优化打印
-            int totalFiles = 0;
-            using (var writer = new StreamWriter(config.OutputFile, false, Encoding.UTF8))
-            {
-                foreach (var group in filesByExtension)
-                {
-                    string ext = group.Key;
-                    string separator = $"============={ext}===============";
-
-                    Console.WriteLine(separator);
-                    writer.WriteLine(separator);
-
-                    foreach (var file in group)
-                    {
-                        Console.WriteLine($"Merging: {file.FullName}");
-                        writer.WriteLine($"===== {file.FullName} =====");
-                        string content = File.ReadAllText(file.FullName);
-                        writer.WriteLine(content);
-                        writer.WriteLine();
-
-                        totalFiles++;
-                    }
-
-                    Console.WriteLine();
-                    writer.WriteLine();
-                }
-            }
-
-            Console.WriteLine($"Done! Merged {totalFiles} files into {config.OutputFile}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-
-        Console.WriteLine("Press any key to exit...");
-        Console.ReadKey();
-    }
-
-    static IEnumerable<FileInfo> GetFiles(string directory, Config config)
-    {
-        var dirInfo = new DirectoryInfo(directory);
-
-        return dirInfo.EnumerateFiles("*", SearchOption.AllDirectories)
-            .Where(file =>
-                config.IncludeExtensions.Any(ext => ext.Equals(file.Extension, StringComparison.OrdinalIgnoreCase)) &&
-                !config.ExcludeExtensions.Any(ext => ext.Equals(file.Extension, StringComparison.OrdinalIgnoreCase)) &&
-                !config.ExcludeFolders.Any(excluded => file.FullName.IndexOf($@"\{excluded}\", StringComparison.OrdinalIgnoreCase) >= 0)
-            );
-    }
+  "includeExtensions": [".cs"],
+  "excludeFolders": ["node_modules", "bin", "obj", ".idea", ".git", "UploadFile", ".config", ".vs"],
+  "excludeExtensions": [".exe", ".png", ".dll", ".docx", ".docxf", ".pptx", ".xlsx", ".json", ".config", ".csproj", ".http", ".sln", ".user"],
+  "outputFile": "all_code.txt"
 }
