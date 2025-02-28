@@ -1,4 +1,5 @@
 # MargeCode Program Introduction / MargeCode 程序介绍
+![image](https://github.com/user-attachments/assets/0aa2acad-cae8-4765-9536-8b6847be740b)
 
 ## Overview / 概述
 
