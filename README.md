@@ -1,44 +1,48 @@
-# MargeCode 程序介绍
+# MargeCode Program Introduction / MargeCode 程序介绍
 
-## 概述
+## Overview / 概述
 
-`MargeCode` 是一个用 C# 编写的文件合并工具，旨在将指定目录及其子目录中的特定类型的代码文件合并到一个输出文件中。它支持通过 JSON 配置文件自定义文件类型、排除文件夹和输出文件名，非常适合整理项目代码、生成代码快照或进行代码审查。
+### English
+The `MargeCode` program is a C# utility designed to merge multiple source code files from a specified directory into a single output file. It supports customizable configurations via a `config.json` file, allowing users to specify which file extensions to include, which folders and extensions to exclude, and the name of the output file. The program is particularly useful for consolidating code for review, archiving, or sharing purposes.
 
-## 功能
+### 中文
+`MargeCode` 程序是一个用 C# 编写的实用工具，旨在将指定目录中的多个源代码文件合并到一个输出文件中。它通过 `config.json` 文件支持可自定义的配置，用户可以指定要包含的文件扩展名、要排除的文件夹和扩展名，以及输出文件的名称。该程序特别适用于整合代码以供审查、存档或分享。
 
-1. **文件筛选**：
-   - 根据文件扩展名（如 `.cs`）筛选需要合并的文件。
-   - 支持排除特定文件夹（如 `node_modules`、`bin`）和文件类型（如 `.exe`、`.dll`）。
+---
 
-2. **动态排除**：
-   - 自动排除程序所在目录，避免将自身或其他无关文件纳入合并。
+## Features / 功能
 
-3. **输出格式**：
-   - 将文件按扩展名分组，每组文件以分隔符标记。
-   - 每个文件内容前添加完整路径作为标题，便于区分。
+### English
+- **File Merging**: Combines all specified source files into a single text file.
+- **Configurable Filters**: Uses `config.json` to define included extensions (e.g., `.cs`), excluded folders (e.g., `bin`, `obj`), and excluded extensions (e.g., `.exe`, `.dll`).
+- **Dynamic Exclusion**: Automatically excludes the folder where the program is located to avoid self-referential issues.
+- **Organized Output**: Groups files by extension in the output file with clear separators for readability.
+- **Error Handling**: Provides feedback on errors, such as missing configuration files or processing issues.
 
-4. **配置文件**：
-   - 通过 `config.json` 文件自定义设置，支持灵活调整合并规则。
+### 中文
+- **文件合并**：将所有指定的源文件合并到一个文本文件中。
+- **可配置过滤器**：使用 `config.json` 定义要包含的扩展名（例如 `.cs`）、要排除的文件夹（例如 `bin`、`obj`）和要排除的扩展名（例如 `.exe`、`.dll`）。
+- **动态排除**：自动排除程序所在文件夹，避免自引用问题。
+- **有序输出**：按扩展名分组文件，在输出文件中使用清晰的分隔符以提高可读性。
+- **错误处理**：提供关于错误的反馈，例如缺少配置文件或处理问题。
 
-5. **错误处理**：
-   - 提供异常捕获和错误提示，确保程序运行稳定。
+---
 
-## 使用方法
+## How to Use / 使用方法
 
-### 1. 准备工作
+### English
 
-- **环境要求**：需要安装 .NET 运行时（如 .NET Core 或 .NET Framework）。
-- **源代码**：将 `Program.cs` 编译为可执行文件（例如 `MargeCode.exe`）。
-- **配置文件**：在程序目录下创建 `config.json`（若无则使用默认设置）。
+1. **Prepare the Environment**:
+   - Ensure you have the .NET runtime installed to run the compiled C# program.
+   - Place the compiled `MargeCode.exe` in a directory above the files you want to merge (e.g., parent directory of your project).
 
-### 2. 配置 `config.json`
-
-以下是一个示例配置文件：
-
-```json
-{
-  "includeExtensions": [".cs"],
-  "excludeFolders": ["node_modules", "bin", "obj", ".idea", ".git", "UploadFile", ".config", ".vs"],
-  "excludeExtensions": [".exe", ".png", ".dll", ".docx", ".docxf", ".pptx", ".xlsx", ".json", ".config", ".csproj", ".http", ".sln", ".user"],
-  "outputFile": "all_code.txt"
-}
+2. **Configure the Program**:
+   - Create a `config.json` file in the same directory as `MargeCode.exe` (optional, defaults will be used if not provided).
+   - Example `config.json`:
+     ```json
+     {
+       "includeExtensions": [".cs"],
+       "excludeFolders": ["node_modules", "bin", "obj", ".idea", ".git", "UploadFile", ".config", ".vs"],
+       "excludeExtensions": [".exe", ".png", ".dll", ".docx", ".docxf", ".pptx", ".xlsx", ".json", ".config", ".csproj", ".http", ".sln", ".user"],
+       "outputFile": "all_code.txt"
+     }
